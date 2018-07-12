@@ -7,63 +7,108 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-import javax.swing.JOptionPane;
 
-public class Player {
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class Player.
+ */
+public class Joueurs {
+
+	/** The name. */
 	private String name;
+	
+	/** The direction. */
 	private int direction;
-	private LengthNode head;
+	
+	/** The head. */
+	private Positions head;
+	
+	/** The color. */
 	private Color color;
 
+	/** The right. */
 	public static int UP = 1, DOWN = 2, LEFT = 3, RIGHT = 4;
 
 
+	/** The thiknes. */
 	public static int PIX_PER_STEP = 5, THIKNES = 5;
 
-	public Player(String name, int direction, Color color, int x, int y)
+	/**
+	 * Instantiates a new player.
+	 *
+	 * @param name the name
+	 * @param direction the direction
+	 * @param color the color
+	 * @param x the x
+	 * @param y the y
+	 */
+	public Joueurs(String name, int direction, Color color, int x, int y)
 	{
 		this.name = name;
 		this.direction = direction;
 		this.color = color;
-		head = new LengthNode(x, y, null);
+		head = new Positions(x, y, null);
 	}
 
+	/**
+	 * Gets the name.
+	 *
+	 * @return the name
+	 */
 	public String getName() {
 		return name;
 	}
 
+	/**
+	 * Sets the direction.
+	 *
+	 * @param direction the new direction
+	 */
 	public void setDirection(int direction) {
 		this.direction = direction;
 	}
 
 
 
+	/**
+	 * Gets the direction.
+	 *
+	 * @return the direction
+	 */
 	public int getDirection() {
 		return direction;
 	}
 
 
 
-	public LengthNode getHead() {
+	/**
+	 * Gets the head.
+	 *
+	 * @return the head
+	 */
+	public Positions getHead() {
 		return head;
 	}
 
+	/**
+	 * Step.
+	 */
 	public void step()
 	{
 		switch(direction)
 		{
 		case 1: 		//haut
-			head = new LengthNode(head.getX(), head.getY() - PIX_PER_STEP, head);
+			head = new Positions(head.getX(), head.getY() - PIX_PER_STEP, head);
 			break;
 		case 2: 		//bas
-			head = new LengthNode(head.getX(), head.getY() + PIX_PER_STEP, head);
+			head = new Positions(head.getX(), head.getY() + PIX_PER_STEP, head);
 			break;
 		case 3: 		//gauche
-			head = new LengthNode(head.getX() - PIX_PER_STEP, head.getY(), head);
+			head = new Positions(head.getX() - PIX_PER_STEP, head.getY(), head);
 			break;
 		case 4: 		//droite
-			head = new LengthNode(head.getX() + PIX_PER_STEP, head.getY(), head);
+			head = new Positions(head.getX() + PIX_PER_STEP, head.getY(), head);
 			break;
 		}
 
@@ -71,14 +116,22 @@ public class Player {
 
 
 
-	public boolean loosed(Player other, int maxWidth, int maxHeight)
+	/**
+	 * Loosed.
+	 *
+	 * @param other the other
+	 * @param maxWidth the max width
+	 * @param maxHeight the max height
+	 * @return true, if successful
+	 */
+	public boolean loosed(Joueurs other, int maxWidth, int maxHeight)
 	{
 		//joueur se touche lui-même
-		for(LengthNode p = head.getNext(); p.getNext() != null ; p = p.getNext())
+		for(Positions p = head.getNext(); p.getNext() != null ; p = p.getNext())
 			if(head.sameValues(p))
 				return true;
 		//il touche un autre joueur
-		for(LengthNode p = other.getHead(); p.getNext() != null ; p = p.getNext())
+		for(Positions p = other.getHead(); p.getNext() != null ; p = p.getNext())
 			if(head.sameValues(p))
 				return true;
 		//il touche les bordures
@@ -88,6 +141,12 @@ public class Player {
 		return false;
 	}
 	
+	/**
+	 * Checks if is winner.
+	 *
+	 * @param uptime the uptime
+	 * @throws ClassNotFoundException the class not found exception
+	 */
 	public void isWinner(long uptime) throws ClassNotFoundException {
 		
 		float Uptime = uptime;
@@ -101,13 +160,11 @@ public class Player {
 		   
 		    Connection conn = null;
 		    conn = DriverManager.getConnection(url, user, password);
-		    System.out.println("Connecté à la BDD!");
-		    Class.forName("com.mysql.jdbc.Driver");  
-		    CallableStatement cStmt = conn.prepareCall("{call add_record(?, ?)}");
+		    CallableStatement cStmt = conn.prepareCall("{call nouveau(?, ?)}");
 		    cStmt.setString(1, this.getName());
 		    cStmt.setString(2, Time);
 		    cStmt.execute();
-		    System.out.println("Enregistré sur la BDD!");
+		    System.out.println("Vainqueur enregistré");
 
 
 		} catch (SQLException ex) {
@@ -118,17 +175,21 @@ public class Player {
 		}
 		
 		
-		System.out.println("Le joueur " + this.getName() + " à gagné!");
+		System.out.println("Le joueur " + this.getName() + " a gagné!");
 		System.out.println("Temps: " + Uptime + "s");
 		
-		JOptionPane.showMessageDialog(null, "Le joueur " + this.getName() + " a gagné", "Game Over", JOptionPane.INFORMATION_MESSAGE);
 	}
 
 
+	/**
+	 * Draw.
+	 *
+	 * @param g the g
+	 */
 	public void draw(Graphics g)
 	{
 		g.setColor(color);
-		LengthNode p = head;
+		Positions p = head;
 		for(;p != null; p=p.getNext()) {
 			g.fillRect(p.getX(), p.getY(), THIKNES, THIKNES);	//tous les joueurs
 		}

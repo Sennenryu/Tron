@@ -6,20 +6,27 @@ import java.awt.event.ActionListener;
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 
-public class GameFrame extends JFrame implements ActionListener{
+// TODO: Auto-generated Javadoc
+/**
+ * The Class GameFrame.
+ */
+public class Fenetre extends JFrame implements ActionListener{
 
-	/**
-	 * 
-	 */
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
 
-	public static final int FRAME_WIDTH = 1200, FRAME_HEIGHT = 800;
+	/** The Constant FRAME_HEIGHT. */
+	public static final int FRAME_WIDTH = 600, FRAME_HEIGHT = 400;
 
 	
-	public GamePanel gamePanel;
+	/** The game panel. */
+	public Deplacements gamePanel;
 
-	public GameFrame()
+	/**
+	 * Instantiates a new game frame.
+	 */
+	public Fenetre()
 	{
 		setSize(FRAME_WIDTH, FRAME_HEIGHT);
 		setTitle("Tron Java Alexandre HALTER");
@@ -27,7 +34,7 @@ public class GameFrame extends JFrame implements ActionListener{
 		
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 	
-		gamePanel = new GamePanel();
+		gamePanel = new Deplacements();
 		
 		
 		gamePanel.setVisible(true);
@@ -38,6 +45,9 @@ public class GameFrame extends JFrame implements ActionListener{
 		
 	}
 
+	/* (non-Javadoc)
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		
